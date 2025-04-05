@@ -236,7 +236,7 @@ exports.sendInvitation = async (req, res, next) => {
         const user = await User.findById(reservation.user);
 
         const mailOptions = {
-            from: process.env.EMAIL_USER,
+            from: `${req.user.name} < ${process.env.EMAIL_USER} >`,
             to: email,
             subject: `Invitation to join reservation at ${restaurant.name}`,
             html: `
