@@ -43,7 +43,7 @@ exports.getReservations = async (req,res,next) =>{
             res.status(200).json({
                 success:1,
                 count:reservations.length,
-                data:reservations
+                data:reservations   
             })
         } catch (error) {
             console.log(error)
@@ -169,9 +169,9 @@ exports.updateReservation = async (req,res,next) =>{
 
 exports.deleteReservation = async (req,res,next) =>{
     try {
-
+        console.log(req.params)
         const reservation = await Reservation.findById(req.params.id)
-
+        console.log({reservation})
         if(reservation.user.toString() !== req.user.id && req.user.role !== 'admin'){
             return res.status(401).json({
                 success:0,
@@ -269,3 +269,33 @@ exports.sendInvitation = async (req, res, next) => {
         });
     }
 };
+
+exports.blockReservation = async (req, res, next) => {
+
+    try {
+        const reservation = await Reservation.findById(req.params.id);
+
+        if (!reservation) {
+            return res.status(404).json({
+                success: false,
+                message: `No reservation found with id ${req.params.id}`
+            });
+        }
+
+        reservation.isBlocked = true;
+        await reservation.save();
+
+        res.status(200).json({
+            success: true,
+            message: 'Reservation blocked successfully',
+            data: reservation
+        });
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            success: false,
+            message: 'Error blocking reservation'
+        });
+    }
+}

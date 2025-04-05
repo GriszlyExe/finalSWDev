@@ -21,12 +21,14 @@ exports.getRestaurants= async (req,res,next)=>{
         query = Restaurant.find(JSON.parse(queryString)).populate('reservations')
         
         //select field
-        if(req.query.select){
-            const fields = req.query.select.split(',').join(' ')
-            console.log(fields)
-            query = query.select(fields)
+        // if(req.query.select){
+        //     const fields = req.query.select.split(',').join(' ')
+        //     console.log(fields)
+        //     query = query.select(fields)
             
-        }
+        // }
+
+        query = query.select('name address phoneNumber hours')
 
         //sort
         if(req.query.sort){

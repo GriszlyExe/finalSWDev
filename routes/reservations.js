@@ -4,7 +4,8 @@ const {getReservations,
     updateReservation,
     deleteReservation,
     getReservation,
-    sendInvitation
+    sendInvitation,
+    blockReservation
 } = require('../controllers/reservations');
 const router = express.Router({mergeParams:true});
 const {protect, authorize} = require('../middleware/auth')
@@ -16,5 +17,6 @@ router.put('/:id',protect,authorize('user','admin'),updateReservation); // Updat
 router.delete('/:id',protect,authorize('user','admin'),deleteReservation); // Delete a reservation by ID
 router.get('/:id',protect, getReservation); // Get a reservation by ID
 router.post('/:reservationId/invite', protect, authorize('user', 'admin'), sendInvitation);
+router.put('/block/:id',protect,authorize('admin'),blockReservation)
 
 module.exports = router;
