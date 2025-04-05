@@ -21,6 +21,15 @@ const UserSchema = new mongoose.Schema({
         enum: ['user','admin'],
         default: 'user'
     },
+    phoneNumber: {
+        type: String,
+        required: [true, 'Please add a phone number'],
+        unique: true,
+        match: [
+            /^\d{10}$/,
+            'Please add a valid phone number'
+        ]
+    },
     password: {
         type: String,
         required: [true,'Please add a password'],

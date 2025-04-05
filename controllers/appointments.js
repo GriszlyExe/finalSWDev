@@ -82,6 +82,8 @@ exports.addAppointment = async (req,res,next) =>{
             })
         }
 
+        console.log(req.user)
+
         req.body.user = req.user.id
 
         const existedAppointments = await Appointment.find({
