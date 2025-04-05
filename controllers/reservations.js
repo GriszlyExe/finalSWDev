@@ -273,12 +273,12 @@ exports.sendInvitation = async (req, res, next) => {
 exports.blockReservation = async (req, res, next) => {
 
     try {
-        const reservation = await Reservation.findById(req.params.id);
+        const reservation = await Reservation.findById(req.params.reservationId);
 
         if (!reservation) {
             return res.status(404).json({
                 success: false,
-                message: `No reservation found with id ${req.params.id}`
+                message: `No reservation found with id ${req.params.reservationId}`
             });
         }
 
