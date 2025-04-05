@@ -48,6 +48,14 @@ const limiter=rateLimit({
     
     const swaggerDocs = swaggerJsDoc(swaggerOptions);
     
+app.options('/*', (req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', ['X-Requested-With', 'Content-Type', 'credentials']);
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Credentials', 'true');
+    res.status(200)
+    next()
+});
 
 app.use(cors());
 app.use('/api-docs',swaggerUI.serve, swaggerUI.setup(swaggerDocs));
@@ -65,7 +73,7 @@ app.use('/api/v1/auth',auth)
 app.use('/api/v1/appointments',appointments)
 app.use('/api/v1/reservations',reservations)
 app.use('/api/v1/restaurants',restaurants)
-app.use('/api/v1/oauth',oauth)
+app.use('/api/v1',oauth)
 
 const PORT = process.env.PORT;
 

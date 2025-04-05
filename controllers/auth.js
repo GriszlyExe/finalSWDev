@@ -1,5 +1,5 @@
 const User = require('../models/User')
-
+const {sendTokenResponse} = require('./utils')
 exports.register = async (req,res,next) => {
     try {
         const {name,email,password,role,phoneNumber} = req.body
@@ -60,7 +60,6 @@ exports.login = async (req,res,next) => {
             msg:'Invalid Credential'
         })
     }
-
 }
 
 //@desc Log user out / clear cookie
@@ -78,26 +77,26 @@ exports.logout=async(req,res,next)=>{
     };
 
 
-const sendTokenResponse = (user,statuscode,res) =>{
-    const token = user.getSignedJwtToken()
+// const sendTokenResponse = (user,statuscode,res) =>{
+//     const token = user.getSignedJwtToken()
 
-    const options = {
-        expires:new Date(Date.now()+process.env.JWT_COOKIE_EXPIRED*24*60*60*1000),
-        httpOnly:true
-    }
+//     const options = {
+//         expires:new Date(Date.now()+process.env.JWT_COOKIE_EXPIRED*24*60*60*1000),
+//         httpOnly:true
+//     }
 
-    if(process.env.NODE_ENV === 'production'){
-        options.secure = true
-    }
+//     if(process.env.NODE_ENV === 'production'){
+//         options.secure = true
+//     }
 
-    res.status(statuscode)/*.cookie('token',token,options)*/.json({
-	_id:user._id,
-name: user.name,
-email:user.email,
-        success:1,
-        token
-    })
-}
+//     res.status(statuscode)/*.cookie('token',token,options)*/.json({
+// 	_id:user._id,
+// name: user.name,
+// email:user.email,
+//         success:1,
+//         token
+//     })
+// }
 
 exports.getMe = async (req,res,next) => {
     const user = await User.findById(req.user.id)
