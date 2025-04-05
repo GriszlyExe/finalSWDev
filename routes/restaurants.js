@@ -13,8 +13,8 @@ const {protect,authorize} = require('../middleware/auth'); // Import authenticat
 router.use('/:restaurantId/reservations', reservationRouter); // Mount reservation routes under restaurant routes
 router.get('/',protect,getRestaurants); // Get all restaurants
 router.get('/:id',protect,getRestaurant); // Get a restaurant by ID
-router.post('/',protect,createRestaurant); // Create a new restaurant
-router.put('/:id',protect,updateRestaurant); // Update a restaurant by ID
-router.delete('/:id',protect,deleteRestaurant); // Delete a restaurant by ID
+router.post('/',protect,authorize('user','admin'),createRestaurant); // C reate a new restaurant
+router.put('/:id',protect,authorize('user','admin'),updateRestaurant); // Update a restaurant by ID
+router.delete('/:id',protect,authorize('user','admin'),deleteRestaurant); // Delete a restaurant by ID
 
 module.exports = router;

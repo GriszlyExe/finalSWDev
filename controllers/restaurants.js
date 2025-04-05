@@ -78,7 +78,6 @@ exports.getRestaurants= async (req,res,next)=>{
 
 exports.getRestaurant = async (req,res,next)=>{
     try {
-        console.log(req.params.id)
         const restaurant = await Restaurant.findById(req.params.id)
         if(!restaurant){
             return res.status(400).json({success:0,msg:`Restaurant not found with id ${req.params.id}`})
