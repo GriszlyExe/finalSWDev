@@ -1,5 +1,22 @@
 const Reservation = require('../models/Reservation');
 const Restaurant = require('../models/Restaurant');
+const User = require('../models/User');
+const nodemailer = require('nodemailer');
+const dotenv = require('dotenv');
+
+dotenv.config({path:'./config/config.env'});
+
+// Email transporter configuration
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false,
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+    }
+});
 
 //Get all reservations
 exports.getReservations = async (req,res,next) =>{
@@ -71,6 +88,8 @@ exports.addReservation = async (req,res,next) =>{
         console.log(req.params)
         req.body.restaurant = req.params.restaurantId
         const restaurant = await Restaurant.findById(req.params.restaurantId)
+
+        console.log(restaurant)
 
         if (!restaurant){
             return res.status(404).json({
@@ -182,3 +201,71 @@ exports.deleteReservation = async (req,res,next) =>{
         })
     }
 }
+
+exports.sendInvitation = async (req, res, next) => {
+    try {
+        const reservation = await Reservation.findById(req.params.reservationId)
+            // .populate('restaurant')
+            // .populate('user', 'name email');
+        
+        if (!reservation) {
+            return res.status(404).json({
+                success: false,
+                message: `No reservation found with id ${req.params.reservationId}`
+            });
+        }
+
+        // Check authorization
+        if (reservation.user._id.toString() !== req.user.id && req.user.role !== 'admin') {
+            return res.status(403).json({
+                success: false,
+                message: 'You are not authorized to invite users to this reservation'
+            });
+        }
+
+        const { email } = req.body;
+
+        if (!email || !email.includes('@gmail.com')) {
+            return res.status(400).json({
+                success: false,
+                message: 'Please provide a valid Gmail address'
+            });
+        }
+
+        const restaurant = await Restaurant.findById(reservation.restaurant);
+        const user = await User.findById(reservation.user);
+
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: `Invitation to join reservation at ${restaurant.name}`,
+            html: `
+                <p>Hello,</p>
+                <p>You have been invited by ${user.name} (${user.email}) to join their reservation:</p>
+                <ul>
+                    <li>Restaurant: ${restaurant.name}</li>
+                    <li>Date: ${reservation.reservationDate.toLocaleString()}</li>
+                    <li>Number of guests: ${reservation.numberOfGuests}</li>
+                </ul>
+                <p>Thank you!</p>
+            `
+        };
+
+        await transporter.sendMail(mailOptions);
+        res.status(200).json({
+            success: true,
+            message: 'Invitation sent successfully',
+            data: {
+                to: email,
+                reservationId: reservation._id
+            }
+        });
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            success: false,
+            message: 'Error sending invitation'
+        });
+    }
+};
