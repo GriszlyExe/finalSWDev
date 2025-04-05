@@ -30,6 +30,10 @@ const UserSchema = new mongoose.Schema({
             'Please add a valid phone number'
         ]
     },
+    isBan:{
+        type: Boolean,
+        default: false
+    },
     password: {
         type: String,
         required: [true,'Please add a password'],
@@ -41,7 +45,7 @@ const UserSchema = new mongoose.Schema({
     createdAt:{
         type: Date,
         default: Date.now
-    }    
+    }
 });
 
 //Encrypt Password

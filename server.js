@@ -16,6 +16,7 @@ const auth = require('./routes/auth')
 const appointments = require('./routes/appointments')
 const reservations = require('./routes/reservations')
 const restaurants = require('./routes/restaurants')
+const oauth = require('./routes/oauth')
 
 dotenv.config({path:'./config/config.env'});
 connectDB();
@@ -64,6 +65,7 @@ app.use('/api/v1/auth',auth)
 app.use('/api/v1/appointments',appointments)
 app.use('/api/v1/reservations',reservations)
 app.use('/api/v1/restaurants',restaurants)
+app.use('/api/v1/oauth',oauth)
 
 const PORT = process.env.PORT;
 
