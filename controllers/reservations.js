@@ -115,9 +115,18 @@ exports.addReservation = async (req,res,next) =>{
             })
         }
 
+        console.log(new Date(req.body.reservationDate).getTime()<Date.now())
+
+        if(new Date(req.body.reservationDate).getTime() < Date.now()){
+            return res.status(400).json({
+                success:0,
+                msg:`The reservation date cannot be in the past`
+            })
+        }
+
         const reservation = await Reservation.create(req.body)
 
-        res.status(200).json({
+        res.status(201).json({
             success:1,
             data:reservation
         })
@@ -133,6 +142,7 @@ exports.addReservation = async (req,res,next) =>{
 exports.updateReservation = async (req,res,next) =>{
     try {
 
+        console.log(req.params)
         let reservation = await Reservation.findById(req.params.id)
         if(!reservation){
             return res.status(404).json({
