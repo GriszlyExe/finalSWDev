@@ -17,6 +17,6 @@ router.put('/:id',protect,authorize('user','admin'),updateReservation); // Updat
 router.delete('/:id',protect,authorize('user','admin'),deleteReservation); // Delete a reservation by ID
 router.get('/:id',protect, getReservation); // Get a reservation by ID
 router.post('/:reservationId/invite', protect, authorize('user', 'admin'), sendInvitation);
-router.put('/block/:id',protect,authorize('admin'),blockReservation)
+router.put('/:reservationId/block',protect,authorize('admin'),blockReservation)
 
 module.exports = router;
