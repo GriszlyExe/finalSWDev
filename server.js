@@ -11,9 +11,7 @@ const hpp=require('hpp');
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUI = require('swagger-ui-express');
 
-const hospitals = require('./routes/hospitals')
 const auth = require('./routes/auth')
-const appointments = require('./routes/appointments')
 const reservations = require('./routes/reservations')
 const restaurants = require('./routes/restaurants')
 const oauth = require('./routes/oauth')
@@ -68,9 +66,7 @@ app.use(limiter);
 
 app.use(cookiePaser())
 
-app.use('/api/v1/hospitals',hospitals)
 app.use('/api/v1/auth',auth)
-app.use('/api/v1/appointments',appointments)
 app.use('/api/v1/reservations',reservations)
 app.use('/api/v1/restaurants',restaurants)
 app.use('/api/v1',oauth)

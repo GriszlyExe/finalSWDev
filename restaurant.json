@@ -1,0 +1,1125 @@
+{
+	"info": {
+		"_postman_id": "bb92a92b-faa0-42db-b58b-4bf4c9ea1e0d",
+		"name": "Restaurant",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "41617099"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "userWrongRegister",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status Code is 400\",() =>{",
+									"    pm.response.to.have.status(400)",
+									"})",
+									"",
+									"pm.execution.setNextRequest(\"userRegister\")"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": "JSON type",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\" : \"KKK\",\n    \"email\": \"{{$randomFullName}}\",\n    \"password\" : \"12345678\",\n    \"role\" : \"user\",\n    \"phoneNumber\" : \"0123456789\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/auth/register",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "userRegister",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status Code is 200\",() =>{",
+									"    pm.response.to.have.status(200)",
+									"})",
+									"",
+									"const res = pm.response.json()",
+									"",
+									"const user_email = res.email",
+									"const user_password = \"12345678\"",
+									"",
+									"pm.globals.set(\"user_email\",user_email)",
+									"pm.globals.set(\"user_password\",user_password)",
+									"",
+									"",
+									"pm.execution.setNextRequest(\"userLogin\")"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": "JSON type",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\" : \"KKK\",\n    \"email\": \"{{$randomEmail}}\",\n    \"password\" : \"12345678\",\n    \"role\" : \"user\",\n    \"phoneNumber\" : \"0123456789\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/auth/register",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "userLogin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status Code is 200\",() =>{",
+									"    pm.response.to.have.status(200)",
+									"})",
+									"",
+									"pm.globals.set(\"role\",\"user\")",
+									"pm.environment.set(\"TOKEN\",pm.response.json().token)",
+									"",
+									"pm.execution.setNextRequest(\"getRestaurant\")"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": "JSON type",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"{{user_email}}\",\n    \"password\" : \"{{user_password}}\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/auth/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "adminRegister",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status Code is 200\",() =>{",
+									"    pm.response.to.have.status(200)",
+									"})",
+									"",
+									"const res = pm.response.json()",
+									"",
+									"const admin_email = res.email",
+									"const admin_password = \"12345678\"",
+									"",
+									"pm.globals.set(\"user_email\",admin_email)",
+									"pm.globals.set(\"user_password\",admin_password)",
+									"",
+									"pm.execution.setNextRequest(\"adminLogin\")"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": "JSON type",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\" : \"KKK\",\n    \"email\": \"{{$randomEmail}}\",\n    \"password\" : \"12345678\",\n    \"role\" : \"admin\",\n    \"phoneNumber\" : \"0123456789\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/auth/register",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "adminLogin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status Code is 200\",() =>{",
+									"    pm.response.to.have.status(200)",
+									"})",
+									"",
+									"pm.environment.set(\"TOKEN\",pm.response.json().token)",
+									"pm.globals.set(\"role\",\"admin\")",
+									"pm.execution.setNextRequest(\"getReservation\")"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": "JSON type",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"{{user_email}}\",\n    \"password\" : \"{{user_password}}\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/auth/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"This is logout\",function(){",
+									"    pm.response.to.have.status(200)",
+									"})",
+									"",
+									"pm.environment.set(\"TOKEN\",null)",
+									"pm.globals.set(\"role\",null)",
+									"",
+									"pm.execution.setNextRequest(\"adminRegister\")"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": "JSON type",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/api/v1/auth/logout",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getMe",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": "JSON type",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer \teyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3YTA4OTI2MjliMGMwY2MxMzdjMTAwOCIsImlhdCI6MTczODU3NDQ4NCwiZXhwIjoxNzQxMTY2NDg0fQ.K-L-aCFP2qGRM7mBwA4uYdU-c1YCK2Im67yFtZNDNok",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"abcde@resend.com\",\n    \"password\" : \"12345678\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/auth/me",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"me"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Restaurant",
+			"item": [
+				{
+					"name": "getRestaurant",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status Code is 200\",() =>{",
+									"    pm.response.to.have.status(200)",
+									"})",
+									"",
+									"const res = pm.response.json()",
+									"",
+									"pm.test(\"There are some restaurants\",() =>{",
+									"    pm.expect(res.length).to.be.above(0)",
+									"})",
+									"",
+									"const restaurant_id = res.data[0]._id",
+									"",
+									"pm.globals.set(\"restaurant_id\",restaurant_id)",
+									"",
+									"console.log(restaurant_id)",
+									"",
+									"pm.execution.setNextRequest(\"addWrongReservation\")"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": "JSON type",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/api/v1/restaurants/",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"restaurants",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "createRestaurant",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status Code is 201\",() =>{",
+									"    pm.response.to.have.status(201)",
+									"})",
+									"",
+									"const res = pm.response.json()",
+									"",
+									"const restaurant_id = res.id"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": "JSON type",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"{{$randomCompanyName}}\",\n  \"address\": {\n    \"street\": \"{{$randomStreetAddress}}\",\n    \"city\": \"{{$randomCity}}\",\n    \"state\": \"{{$randomCountry}}\",\n    \"zipCode\": \"{{$randomInt}}\"\n  },\n  \"phone\": \"{{$randomPhoneNumber}}\",\n  \"capacity\": {{$randomInt}},\n  \"hours\": [\n    {\n      \"day\": \"Monday\",\n      \"open\": \"10:00 AM\",\n      \"close\": \"11:00 PM\"\n    },\n    {\n      \"day\": \"Saturday\",\n      \"open\": \"10:00 AM\",\n      \"close\": \"01:00 AM\"\n    },\n    {\n      \"day\": \"Sunday\",\n      \"open\": \"11:00 AM\",\n      \"close\": \"10:00 PM\"\n    }\n  ]\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/restaurants/",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"restaurants",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getRestaurantById",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": "JSON type",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/api/v1/restaurants/67f0de1e32fab6c621e8a617",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"restaurants",
+								"67f0de1e32fab6c621e8a617"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Reservation",
+			"item": [
+				{
+					"name": "addWrongReservation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"This is wrong addReservation\", function(){",
+									"    pm.response.to.have.status(400)",
+									"})",
+									"",
+									"pm.execution.setNextRequest(\"addCorrectReservation\")"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": "JSON type",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "    {\n        \"numberOfGuests\": {{$randomInt}},\n        \"reservationDate\": \"{{$randomDatePast}}\"\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/restaurants/:restaurantId/reservations/",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"restaurants",
+								":restaurantId",
+								"reservations",
+								""
+							],
+							"variable": [
+								{
+									"key": "restaurantId",
+									"value": "{{restaurant_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "addCorrectReservation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"This is correct addReservation\", function(){",
+									"    pm.response.to.have.status(201)",
+									"})",
+									"",
+									"const res = pm.response.json()",
+									"",
+									"pm.execution.setNextRequest(\"getReservation\")"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": "JSON type",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "    {\n        \"numberOfGuests\": {{$randomInt}},\n        \"reservationDate\": \"{{$randomDateFuture}}\"\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/restaurants/:restaurantId/reservations/",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"restaurants",
+								":restaurantId",
+								"reservations",
+								""
+							],
+							"variable": [
+								{
+									"key": "restaurantId",
+									"value": "{{restaurant_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateReservation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"This is update reservation\", function(){",
+									"    pm.response.to.have.status(200)",
+									"})",
+									"",
+									"const res = pm.response.json()",
+									"const role = pm.globals.get('role')",
+									"if (role=='user'){",
+									"    pm.execution.setNextRequest(\"sendInvitation\")",
+									"}else{",
+									"    pm.execution.setNextRequest(\"banReservation\")",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": "JSON type",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "    {\n        \"numberOfGuests\": {{$randomInt}},\n        \"reservationDate\": \"{{$randomDateFuture}}\"\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/reservations/:reservation_id",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"reservations",
+								":reservation_id"
+							],
+							"variable": [
+								{
+									"key": "reservation_id",
+									"value": "{{reservation_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteReservation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"This is delete reservation\", function(){",
+									"    pm.response.to.have.status(200)",
+									"})",
+									"",
+									"const res = pm.response.json()",
+									"",
+									"if(pm.globals.get(\"role\") === \"user\"){",
+									"    pm.execution.setNextRequest(\"logout\")",
+									"}else{",
+									"    pm.execution.setNextRequest(null)",
+									"}",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": "JSON type",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/api/v1/reservations/:reservation_id",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"reservations",
+								":reservation_id"
+							],
+							"variable": [
+								{
+									"key": "reservation_id",
+									"value": "{{reservation_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getReservation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"This is view reservation\", function(){",
+									"    pm.response.to.have.status(200)",
+									"})",
+									"",
+									"const res = pm.response.json()",
+									"",
+									"const reservation_id = res.data[0]._id",
+									"pm.globals.set(\"reservation_id\",reservation_id)",
+									"",
+									"if(pm.globals.get(\"role\") === \"user\"){",
+									"    pm.test(\"There are some reservation\",() =>{",
+									"        pm.expect(res.count).to.be.above(0)",
+									"        pm.expect(res.count).to.be.below(4)",
+									"})",
+									"}else{",
+									"    pm.test(\"There are some reservation\",() =>{",
+									"    pm.expect(res.count).to.be.above(0)",
+									"})",
+									"}",
+									"",
+									"",
+									"pm.execution.setNextRequest(\"updateReservation\")"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/reservations/",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"reservations",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "sendInvitation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"This is send reservation invitation.\", function(){",
+									"    pm.response.to.have.status(200)",
+									"})",
+									"",
+									"pm.execution.setNextRequest(\"deleteReservation\")",
+									"",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\" : \"grillmon01234@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/reservations/:reservation_id/invite",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"reservations",
+								":reservation_id",
+								"invite"
+							],
+							"variable": [
+								{
+									"key": "reservation_id",
+									"value": "{{reservation_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "banReservation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"This is send reservation invitation.\", function(){",
+									"    pm.response.to.have.status(200)",
+									"})",
+									"",
+									"",
+									"pm.execution.setNextRequest(\"deleteReservation\")",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/reservations/:reservation_id/block",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"reservations",
+								":reservation_id",
+								"block"
+							],
+							"variable": [
+								{
+									"key": "reservation_id",
+									"value": "{{reservation_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "URL",
+			"value": "http://localhost:10000",
+			"type": "string"
+		}
+	]
+}
